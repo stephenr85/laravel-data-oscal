@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Rushing\DataOscal;
 
 /**
@@ -10,7 +8,7 @@ namespace Rushing\DataOscal;
  * back into neutral maps keyed by `control-id`, the inverse of an {@see Contracts\OscalProjector}.
  * Domain-agnostic: it reads OSCAL structure, never compliance meaning.
  */
-final class OscalDereferencer
+class OscalDereferencer
 {
     /**
      * @param  array<string, mixed>  $assessmentResults

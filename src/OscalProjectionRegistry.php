@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Rushing\DataOscal;
 
 use Rushing\DataOscal\Contracts\OscalProjector;
@@ -13,7 +11,7 @@ use Spatie\LaravelData\Data;
  * class = exactly one {@see OscalProjector}; dispatch is strict on `$data::class`, never on node
  * shape, so routing is deterministic and an unknown class throws loudly.
  */
-final class OscalProjectionRegistry
+class OscalProjectionRegistry
 {
     /** @var array<class-string<Data>, OscalProjector> */
     private array $byClass = [];

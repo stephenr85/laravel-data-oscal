@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Rushing\DataOscal\OscalDereferencer;
 
 it('walks assessment-results findings keyed by control-id', function () {

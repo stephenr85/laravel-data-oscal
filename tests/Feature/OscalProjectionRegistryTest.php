@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 use Rushing\DataOscal\Exceptions\UnknownProjector;
 use Rushing\DataOscal\OscalProjectionRegistry;
 use Rushing\DataOscal\Tests\Fixtures\ControlData;
