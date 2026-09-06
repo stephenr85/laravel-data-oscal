@@ -12,7 +12,6 @@ use Rushing\Popcorn\Registries\Key;
 use Rushing\Popcorn\Registries\OnDuplicate;
 use Rushing\Popcorn\Registries\Optionality;
 use Rushing\Popcorn\Registries\Registry;
-use Rushing\Popcorn\Registries\RegistryArity;
 use Rushing\Popcorn\Registries\RegistryKey;
 use Spatie\LaravelData\Data;
 
@@ -45,19 +44,10 @@ use Spatie\LaravelData\Data;
  */
 #[IsRegistry(
     root: 'oscal.projectors',
-    of: 'OSCAL projectors keyed by the Data class each handles — the emit-side leaf a host maps its '
-        .'own compliance vocabulary onto',
-    arity: RegistryArity::PickOne,
     entryType: OscalProjector::class,
     onDuplicate: OnDuplicate::Supersede,
     optionality: Optionality::Optional,
-    note: 'PickOne because `project()` LOOKS like a fan-out and is not one — it dispatches ONE instance '
-        .'by $data::class to exactly one projector. The projector names its own key via subject(), so '
-        .'there is no key to put in config and nothing hand-registers a key. Supersede matches the '
-        .'behaviour this class has always had: registration was a plain array assignment, so a second '
-        .'projector for one Data class replaced the first and nothing reported it. The key is the '
-        .'subject class path segment-mapped, not `Key::fromClass()`\'s basename, because a basename '
-        .'derivation would let two same-named DTOs supersede each other.',
+    description: 'OSCAL projectors keyed by their subject Data class. project() dispatches each instance to one projector. Registering another projector for the same subject replaces the previous one. Keys include the subject namespace so same-named DTOs remain distinct.',
     order: 54,
 )]
 class OscalProjectionRegistry implements Gated, Registry
