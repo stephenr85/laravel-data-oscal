@@ -9,8 +9,8 @@ use Rushing\Popcorn\Registries\BasicRegistry;
 use Rushing\Popcorn\Registries\Gated;
 use Rushing\Popcorn\Registries\IsRegistry;
 use Rushing\Popcorn\Registries\Key;
-use Rushing\Popcorn\Registries\OnDuplicate;
-use Rushing\Popcorn\Registries\Optionality;
+use Rushing\Popcorn\Registries\OnKeyDuplicate;
+use Rushing\Popcorn\Registries\PopulationRequirement;
 use Rushing\Popcorn\Registries\Registry;
 use Rushing\Popcorn\Registries\RegistryKey;
 use Spatie\LaravelData\Data;
@@ -25,7 +25,7 @@ use Spatie\LaravelData\Data;
  * `Key::fromClass()` is the kernel's sanctioned derivation for class-strings, and it takes the
  * **basename** — right where the class-string is the ENTRY and nothing looks up by key. Here the class
  * IS the lookup identity, and two `AssessmentData` classes in two namespaces would have collided on
- * `assessment-data` under {@see OnDuplicate::Supersede}, silently losing a projector at registration.
+ * `assessment-data` under {@see OnKeyDuplicate::Supersede}, silently losing a projector at registration.
  * So the namespace becomes the key's segments and the short name keeps `fromClass()`'s kebab rule:
  * `Splicewire\Tower\Determination\Soc2\Oscal\Soc2AssessmentData` →
  * `oscal.projectors.splicewire.tower.determination.soc2.oscal.soc2-assessment-data`. Every historical
@@ -45,8 +45,8 @@ use Spatie\LaravelData\Data;
 #[IsRegistry(
     root: 'oscal.projectors',
     entryType: OscalProjector::class,
-    onDuplicate: OnDuplicate::Supersede,
-    optionality: Optionality::Optional,
+    onKeyDuplicate: OnKeyDuplicate::Supersede,
+    populationRequirement: PopulationRequirement::Optional,
     description: 'OSCAL projectors keyed by their subject Data class. project() dispatches each instance to one projector. Registering another projector for the same subject replaces the previous one. Keys include the subject namespace so same-named DTOs remain distinct.',
     order: 54,
 )]
