@@ -14,6 +14,14 @@ extending ADR-0050): OSCAL's terms *invert* a typical compliance model (OSCAL `c
 this seam. "Maps perfectly" is a **round-trip conformance test** (project → parse → project = structural
 equality), not name-parity.
 
+## Registries
+
+This package declares one registry:
+
+- [`oscal.projectors`](docs/registries/oscal.projectors.mdx): one projector per Data class, which
+  `OscalProjectionRegistry` dispatches to. The package ships none; your application registers its
+  own.
+
 ## Provenance
 
 Extracted from the SOC 2 self-audit dogfood's OSCAL projection (`splicewire-app`
