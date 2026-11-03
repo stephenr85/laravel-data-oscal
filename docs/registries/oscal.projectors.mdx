@@ -1,0 +1,83 @@
+---
+title: OSCAL projectors
+segment: oscal.projectors
+nav_order: 54
+excerpt: One projector per Data class, turning your laravel-data DTOs into NIST OSCAL document nodes.
+---
+
+# OSCAL projectors
+
+`oscal.projectors` holds the projectors that turn your `spatie/laravel-data` DTOs into **NIST
+OSCAL** document nodes, the JSON format used to exchange security controls, assessments and
+findings. Each entry is an `OscalProjector`: it names the Data class it handles (`subject()`) and
+projects one instance into a nested array (`project()`). `OscalProjectionRegistry::project($data)`
+dispatches on the instance's exact class.
+
+{/* registry-facts:start — generated from the #[IsRegistry] declaration by `splicewire:beam:docs:registries:scaffold`. Rerun the command; do not edit between these markers. */}
+
+- **Root:** `oscal.projectors`
+- **Entries:** `Rushing\DataOscal\Contracts\OscalProjector`
+- **Duplicate keys:** Supersede — a later registration under a taken key replaces the earlier entry, in its place
+- **Population:** Optional — an empty registry is normal
+- **Order:** `54` (display order, ascending)
+- **Declared by:** `Rushing\DataOscal\OscalProjectionRegistry`
+
+{/* registry-facts:end */}
+
+## Who fills it
+
+The package ships **no projectors**, and no compliance vocabulary of its own. OSCAL's terms rarely
+line up one-to-one with an application's model (what OSCAL calls a `control` may be what your
+application calls a criterion), so the mapping belongs in your application, written once per Data
+class:
+
+```php
+use Rushing\DataOscal\Contracts\OscalProjector;
+use Rushing\DataOscal\OscalProjectionRegistry;
+use Spatie\LaravelData\Data;
+
+final class AssessmentProjector implements OscalProjector
+{
+    public function subject(): string
+    {
+        return AssessmentData::class;
+    }
+
+    public function project(Data $data): array
+    {
+        return ['uuid' => $data->id, 'title' => $data->title /* … */];
+    }
+}
+
+$this->app->make(OscalProjectionRegistry::class)->register(new AssessmentProjector);
+```
+
+A projector keys itself by its subject class.
+
+## Reading it
+
+- `project($data)` projects one instance.
+- `for(AssessmentData::class)` returns the projector and throws `UnknownProjector` when there is
+  none, so an unmapped class fails loudly instead of being left out of the document.
+- `tryFor(AssessmentData::class)` returns `null` instead of throwing.
+- `subjects()` lists the registered subjects in key form (`app.audit.assessment-data`).
+
+## Keys
+
+The key is the subject's **whole class path**, so two Data classes with the same short name in
+different namespaces stay separate. `App\Audit\AssessmentData` is stored as
+`oscal.projectors.app.audit.assessment-data`. Every read accepts the class name, so you never spell
+the key yourself.
+
+## Duplicates
+
+The policy is **supersede**: registering a second projector for the same subject class replaces the
+first.
+
+## Going deeper
+
+The source is
+[`OscalProjectionRegistry`](https://github.com/stephenr85/laravel-data-oscal/blob/main/src/OscalProjectionRegistry.php);
+the contract is
+[`OscalProjector`](https://github.com/stephenr85/laravel-data-oscal/blob/main/src/Contracts/OscalProjector.php).
+The package also ships `OscalDereferencer`, the reverse direction: it reads findings and implemented requirements back out of an OSCAL document, keyed by `control-id`.
