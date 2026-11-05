@@ -2,6 +2,7 @@
 
 namespace Rushing\DataOscal;
 
+use Rushing\Popcorn\Registries\ScopesRegistrant;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -11,6 +12,14 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
  */
 class ServiceProvider extends PackageServiceProvider
 {
+    use ScopesRegistrant;
+
+    /** Every registry write in register()/boot() that names no `$by` records this package. */
+    protected function registrant(): string
+    {
+        return 'rushing/laravel-data-oscal';
+    }
+
     public function configurePackage(Package $package): void
     {
         $package
